@@ -66,3 +66,10 @@ SELECT * FROM students WHERE (country IN ('Bangladesh', 'India')) AND age = 23;
 
 SELECT * FROM students WHERE (grade = 'A' OR grade = 'B') AND (course = 'Math' OR course = 'Physics');
 
+SELECT * FROM students WHERE age = 20;
+SELECT * FROM students WHERE age < 22;
+SELECT * FROM students WHERE age > 20;
+SELECT * FROM students WHERE age <= 20;
+SELECT * FROM students WHERE age >= 20;
+SELECT * FROM students WHERE age != 20;
+SELECT * FROM students WHERE age <> 20;
