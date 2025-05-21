@@ -8,7 +8,7 @@ CREATE TABLE "user" (
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    user_id INTEGER REFERENCES "user"(id)
+    user_id INTEGER REFERENCES "user"(id) on DELETE set null
 )
 
 ALTER TABLE post 
@@ -26,12 +26,17 @@ INSERT INTO post (title, user_id) VALUES
 ('Hello Everyone', 1),
 ('Hello World', 4),
 ('Hello Bangladesh', 3),
-('Hello Dhaka', 2),
-('Hello Chittagong', 1),
-('Hello Sylhet', 3),
-('Hello Khulna', 4),
-('Hello Barisal', 2)
+('Hello Dhaka', 2)
+
+DROP TABLE post;
+DROP TABLE "user"; 
 
 SELECT * FROM post;
+
+SELECT * FROM "user";
+
+DELETE FROM "user"
+    WHERE id = 1;
+
 
 
