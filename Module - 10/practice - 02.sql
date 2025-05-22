@@ -40,3 +40,12 @@ SELECT customer_id, COUNT(order_id), SUM(total_amount) as total_spand FROM order
 SELECT extract(month FROM order_date) AS month,SUM(total_amount) AS total_spent FROM orders
     WHERE order_date >= '2022-01-01' AND order_date < '2022-03-01'
     GROUP BY month;
+
+
+
+
+
+
+
+
+
