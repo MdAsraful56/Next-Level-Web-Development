@@ -14,6 +14,9 @@ WHERE salary > (
 
 
 
+
+
+
 SELECT * FROM departments;
 
 
