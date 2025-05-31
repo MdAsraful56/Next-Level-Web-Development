@@ -1,0 +1,52 @@
+[
+    {
+        "title": "Buy groceries",
+        "body": "Milk, eggs, bread, and vegetables",
+        "date": "2025-05-31"
+    },
+    {
+        "title": "Finish React component",
+        "body": "Implement the new navbar",
+        "date": "2025-06-01"
+    },
+    {
+        "title": "Review PostgreSQL queries",
+        "body": "Optimize database performance",
+        "date": "2025-06-02"
+    },
+    {
+        "title": "Practice Russian phrases",
+        "body": "Learn greetings and common expressions",
+        "date": "2025-06-03"
+    },
+    {
+        "title": "Read TypeScript documentation",
+        "body": "Focus on function interfaces",
+        "date": "2025-06-04"
+    },
+    {
+        "title": "Debug API request",
+        "body": "Fix path issues in fetch calls",
+        "date": "2025-06-05"
+    },
+    {
+        "title": "Update laptop drivers",
+        "body": "Ensure hardware compatibility",
+        "date": "2025-06-06"
+    },
+    {
+        "title": "Design UI animation",
+        "body": "Implement Framer Motion effects",
+        "date": "2025-06-07"
+    },
+    {
+        "title": "Prepare SQL tutorial",
+        "body": "Explain JOIN operations in Bengali",
+        "date": "2025-06-08"
+    },
+    {
+        "title": "Plan student platform features",
+        "body": "Brainstorm new utilities",
+        "date": "2025-06-09"
+    }
+]
