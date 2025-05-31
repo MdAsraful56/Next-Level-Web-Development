@@ -39,22 +39,19 @@ const server = http.createServer( (req, res) => {
             console.log(data);
             const todo = JSON.parse(data);
             console.log(todo);
-
             // Append the new todo to the existing todos
+            const title = todo.title;
+            const body = todo.body;
+            const date = new Date().toLocaleString();
+            const newTodo = { title, body, date };
 
-        const title = todo.title;
-        const body = todo.body;
-        const date = new Date().toLocaleString();
-        const newTodo = { title, body, date };
+            const allTodos = fs.readFileSync(filePath, { encoding: 'utf-8' });
+            const parseAllTodos = JSON.parse(allTodos);
+            parseAllTodos.push(newTodo);
+            fs.writeFileSync(filePath, JSON.stringify(parseAllTodos, null, 2), { encoding: 'utf-8' });
 
-
-
-
+            res.end(JSON.stringify({title, body, date}, null, 2));
         });
-
-
-
-        res.end('Creating a new todo...');
     } else {
         res.statusCode = 404;
         res.end('Not Found');
