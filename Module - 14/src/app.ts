@@ -12,12 +12,14 @@ const filepath = path.join(__dirname, "../db/todos.json")
 app.get('/', (req : Request, res : Response) => {
     res.send('Hay, This is Todo App server')
 });
+
 // get all todos route 
 app.get('/todos', (req : Request, res : Response) => {
     const data = fs.readFileSync(filepath, { encoding: 'utf-8' })
     // console.log(data);
     res.json(JSON.parse(data));
 });
+
 // post create a single route 
 app.post('/todos/create-todo', (req : Request, res : Response) => {
     const { title, body } = req.body;
@@ -29,5 +31,8 @@ app.post('/todos/create-todo', (req : Request, res : Response) => {
     fs.writeFileSync(filepath, JSON.stringify(parseAllTodos, null, 2));
     res.send('Todo created successfully');
 });
+
+
+
 
 export default app;
