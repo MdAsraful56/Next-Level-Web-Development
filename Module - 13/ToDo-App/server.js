@@ -11,15 +11,19 @@ const server = http.createServer( (req, res) => {
     // console.log(req.url, res.method);
     const data = fs.readFileSync(filePath, {encoding: 'utf-8'});
 
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const pathname = url.pathname;
+
+
     // get all todos
-    if (req.url === '/todos' && req.method === 'GET') {
-                    // Way - 01
+    if (pathname === '/todos' && req.method === 'GET') {
+        //            // Way - 01
         res.writeHead(201, {
             'content-type' : 'application/json',
             'email' : 'todo@example.com'
         })
 
-        //             // Way - 02
+        //            // Way - 02
         // res.statusCode = 201;
         // res.setHeader('Content-Type', 'text/plain');
         // res.setHeader('Email', 'ph2@example.com');
@@ -27,10 +31,8 @@ const server = http.createServer( (req, res) => {
         res.end(data);
     } 
     // create a new todo
-    else if (req.url === '/todos/create-todo' && req.method === 'POST') {
-
+    else if (pathname === '/todos/create-todo' && req.method === 'POST') {
         let data  = '';
-
         req.on('data', (chunk) => {
             data += chunk;
         })
@@ -52,7 +54,56 @@ const server = http.createServer( (req, res) => {
 
             res.end(JSON.stringify({title, body, date}, null, 2));
         });
-    } else {
+    }
+    else if (pathname === '/todo' && req.method === 'GET') {
+        const title = url.searchParams.get('title');
+        console.log(title);
+        const allTodos = fs.readFileSync(filePath, { encoding: 'utf-8' });
+        const parseAllTodos = JSON.parse(allTodos);
+        const todo = parseAllTodos.find(todo => todo.title === title);
+        res.end(JSON.stringify(todo, null, 2));
+    }
+    else if (pathname === '/todos/update-todo' && req.method === 'PATCH') {
+        let data  = '';
+        const title = url.searchParams.get('title');
+        req.on('data', (chunk) => {
+            data += chunk;
+        })
+
+        req.on('end', () => {
+            const todo = JSON.parse(data);;
+            const body = todo.body;
+
+            const allTodos = fs.readFileSync(filePath, { encoding: 'utf-8' });
+            const parseAllTodos = JSON.parse(allTodos);
+            const todoIndex = parseAllTodos.findIndex(todo => todo.title === title);
+            if (todoIndex === -1) {
+                res.statusCode = 404;
+                return res.end(JSON.stringify({ error: 'Todo not found' }));
+            }
+            parseAllTodos[todoIndex].body = body;
+            fs.writeFileSync(filePath, JSON.stringify(parseAllTodos, null, 2), { encoding: 'utf-8' });
+
+            res.end(JSON.stringify({title, body, date : parseAllTodos[todoIndex].date}, null, 2));
+        });
+    }
+    // delete a todo
+    else if (pathname === '/todos/delete-todo' && req.method === 'DELETE') {
+        const title = url.searchParams.get('title');
+        const allTodos = fs.readFileSync(filePath, { encoding: 'utf-8' });
+        const parseAllTodos = JSON.parse(allTodos);
+        const todoIndex = parseAllTodos.findIndex(todo => todo.title === title);
+        if (todoIndex === -1) {
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ error: 'Todo not found' }));
+        }
+        parseAllTodos.splice(todoIndex, 1);
+        fs.writeFileSync(filePath, JSON.stringify(parseAllTodos, null, 2), { encoding: 'utf-8' });
+
+        res.end(JSON.stringify({ message: 'Todo deleted successfully' }, null, 2));
+    }
+    // 404 Not Found
+    else {
         res.statusCode = 404;
         res.end('Not Found');
     }
