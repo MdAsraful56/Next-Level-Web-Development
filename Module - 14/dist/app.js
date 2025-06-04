@@ -1,34 +1,56 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // const express = require('express')
 const express_1 = __importDefault(require("express"));
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
+const Todos_routes_1 = __importDefault(require("./app/todos/Todos.routes"));
 const app = (0, express_1.default)();
+// const todoSRouter = express.Router()
+const userRouter = express_1.default.Router();
 app.use(express_1.default.json());
-const filepath = path_1.default.join(__dirname, "../db/todos.json");
+app.use('/todos', Todos_routes_1.default);
+app.use('/users', userRouter);
 // main route 
-app.get('/', (req, res) => {
-    res.send('Hay, This is Todo App server');
+app.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log({
+        url: req.url,
+        method: req.method,
+        headers: req.headers
+    });
+    next();
+}), (req, res, next) => {
+    try {
+        // console.log(something);
+        res.send('Hay, This is Todo App server');
+    }
+    catch (error) {
+        next(error);
+    }
 });
-// get all todos route 
-app.get('/todos', (req, res) => {
-    const data = fs_1.default.readFileSync(filepath, { encoding: 'utf-8' });
-    // console.log(data);
-    res.json(JSON.parse(data));
+// 404 route
+app.use((req, res, next) => {
+    res.status(404).json({
+        message: 'Route not found'
+    });
 });
-// post create a single route 
-app.post('/todos/create-todo', (req, res) => {
-    const { title, body } = req.body;
-    // console.log(title, body);
-    const newTodo = { title, body, date: new Date().toISOString() };
-    const allTodos = fs_1.default.readFileSync(filepath, { encoding: 'utf-8' });
-    const parseAllTodos = JSON.parse(allTodos);
-    parseAllTodos.push(newTodo);
-    fs_1.default.writeFileSync(filepath, JSON.stringify(parseAllTodos, null, 2));
-    res.send('Todo created successfully');
+// error handling middleware
+app.use((error, req, res, next) => {
+    console.error(error);
+    // res.status(500).send('Internal Server Error');
+    res.status(500).json({
+        message: error.message || 'Internal Server Error',
+        stack: process.env.NODE_ENV === 'production' ? null : error.stack
+    });
 });
 exports.default = app;

@@ -1,38 +1,52 @@
 // const express = require('express')
-import express, { Application, Request, Response } from "express"
-import fs from "fs"
-import path from "path"
+import express, { Application, NextFunction, Request, Response } from "express"
+import todosRouter from "./app/todos/Todos.routes"
+import e from "express"
 const app : Application = express()
 
-app.use(express.json())
+// const todoSRouter = express.Router()
+const userRouter = express.Router()
 
-const filepath = path.join(__dirname, "../db/todos.json")
+
+app.use(express.json())
+app.use('/todos', todosRouter)
+app.use('/users', userRouter)
 
 // main route 
-app.get('/', (req : Request, res : Response) => {
-    res.send('Hay, This is Todo App server')
-});
-
-// get all todos route 
-app.get('/todos', (req : Request, res : Response) => {
-    const data = fs.readFileSync(filepath, { encoding: 'utf-8' })
-    // console.log(data);
-    res.json(JSON.parse(data));
-});
-
-// post create a single route 
-app.post('/todos/create-todo', (req : Request, res : Response) => {
-    const { title, body } = req.body;
-    // console.log(title, body);
-    const newTodo = { title, body, date: new Date().toISOString() };
-    const allTodos = fs.readFileSync(filepath, { encoding: 'utf-8' });
-    const parseAllTodos = JSON.parse(allTodos);
-    parseAllTodos.push(newTodo);
-    fs.writeFileSync(filepath, JSON.stringify(parseAllTodos, null, 2));
-    res.send('Todo created successfully');
+app.get('/', async (req: Request, res: Response, next: NextFunction) => {
+    console.log({
+        url: req.url,
+        method: req.method,
+        headers: req.headers
+    });
+    next();
+},
+    
+    (req : Request, res : Response, next: NextFunction) => {
+    try {
+        // console.log(something);
+        res.send('Hay, This is Todo App server');
+    } catch (error) {
+        next(error);
+    }
 });
 
 
+// 404 route
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.status(404).json({
+        message: 'Route not found'
+    });
+});
 
+// error handling middleware
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(error);
+    // res.status(500).send('Internal Server Error');
+    res.status(500).json({
+        message: error.message || 'Internal Server Error',
+        stack: process.env.NODE_ENV === 'production' ? null : error.stack
+    });
+});
 
 export default app;
