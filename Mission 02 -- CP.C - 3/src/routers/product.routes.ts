@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
+import handleProducts from '../controller/product.controller';
 
 const routeHandler = async (req: IncomingMessage, res: ServerResponse) => {
     const url = req.url || '';
@@ -10,8 +11,7 @@ const routeHandler = async (req: IncomingMessage, res: ServerResponse) => {
     }
 
     else if (url === '/products' && method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end('try this: /products');
+        await handleProducts(req, res);
     }
 
     else {

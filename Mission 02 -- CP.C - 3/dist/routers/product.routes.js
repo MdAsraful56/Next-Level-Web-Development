@@ -8,7 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const product_controller_1 = __importDefault(require("../controller/product.controller"));
 const routeHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const url = req.url || '';
     const method = req.method;
@@ -17,8 +21,7 @@ const routeHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.end('Welcome to the Product API');
     }
     else if (url === '/products' && method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end('try this: /products');
+        yield (0, product_controller_1.default)(req, res);
     }
     else {
         res.writeHead(404);
