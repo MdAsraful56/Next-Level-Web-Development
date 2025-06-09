@@ -8,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const product_1 = __importDefault(require("../data/product"));
 const handleProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const url = req.url || '';
     const method = req.method;
     if (url === '/products' && method === 'GET') {
         res.writeHead(200, { 'Content-type': 'application/json' });
-        res.end(JSON.stringify([products]));
+        res.end(JSON.stringify([product_1.default]));
     }
 });
 exports.default = handleProducts;
