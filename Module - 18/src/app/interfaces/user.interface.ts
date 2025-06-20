@@ -1,8 +1,9 @@
 interface IUser {
     name: string;
     email: string;
+    age: number;
     password: string;
-    role: "user" | "admin";
+    role: "USER" | "ADMIN";
 };
 
 

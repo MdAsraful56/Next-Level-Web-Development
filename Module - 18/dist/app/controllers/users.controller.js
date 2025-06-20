@@ -15,7 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const users_model_1 = require("../models/users.model");
+const zod_1 = require("zod");
 exports.usersRoutes = express_1.default.Router();
+// using zod for validation
+const createUserSchemaZod = zod_1.z.object({
+    name: zod_1.z.string().min(3).max(20),
+    email: zod_1.z.string().email(),
+    age: zod_1.z.number(),
+    password: zod_1.z.string(),
+    role: zod_1.z.string().optional()
+});
 // get all users
 exports.usersRoutes.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield users_model_1.User.find();
@@ -37,13 +46,22 @@ exports.usersRoutes.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, 
 }));
 // create user 
 exports.usersRoutes.post("/create-user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body;
-    const user = yield users_model_1.User.create(body);
-    res.status(201).json({
-        success: true,
-        message: "User created successfully",
-        user
-    });
+    try {
+        const body = yield createUserSchemaZod.parseAsync(req.body);
+        const user = yield users_model_1.User.create(body);
+        res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            user: {}
+        });
+    }
+    catch (error) {
+        res.status(400).json({
+            success: false,
+            message: "Invalid data",
+            error: error instanceof zod_1.z.ZodError ? error.errors : error
+        });
+    }
 }));
 // update user by id
 exports.usersRoutes.patch("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

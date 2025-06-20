@@ -1,9 +1,25 @@
 import express, { Request, Response } from "express";
 import { User } from "../models/users.model";
+import { z } from "zod";
 
 
 
 export const usersRoutes = express.Router();
+
+
+
+// using zod for validation
+const createUserSchemaZod = z.object({
+    name: z.string().min(3).max(20),
+    email: z.string().email(),
+    age: z.number(),
+    password: z.string(),
+    role: z.string().optional()
+})
+
+
+
+
 
 // get all users
 usersRoutes.get("/", async (req: Request, res: Response) => {
@@ -30,15 +46,25 @@ usersRoutes.get("/:id", async (req: Request, res: Response) => {
 
 
 // create user 
-usersRoutes.post("/create-user", async (req: Request, res: Response) => {
-    const body = req.body;
-    const user = await User.create(body);
+usersRoutes.post("/create-user", async (req: Request, res: Response): Promise<void> => {
+    try {
+        const body = await createUserSchemaZod.parseAsync(req.body);
 
-    res.status(201).json({
-        success: true,
-        message: "User created successfully",
-        user
-    });
+        const user = await User.create(body);
+
+        res.status(201).json({
+            success: true,
+            message: "User created successfully",
+            user: {}
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: "Invalid data",
+            error: error instanceof z.ZodError ? error.errors : error
+        });
+    }
 });
 
 
