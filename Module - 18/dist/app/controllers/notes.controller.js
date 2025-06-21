@@ -16,10 +16,11 @@ exports.notesRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const notes_model_1 = require("../models/notes.model");
 // import { Note } from "../models/notes.model";
+// import bcrypt from './../../../node_modules/bcryptjs/index.d';
 exports.notesRoutes = express_1.default.Router();
 // get all notes
 exports.notesRoutes.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const notes = yield notes_model_1.Note.find();
+    const notes = yield notes_model_1.Note.find().populate("userId");
     res.status(200).json({
         success: true,
         notes
@@ -73,3 +74,4 @@ exports.notesRoutes.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 
         message: "Note deleted successfully"
     });
 }));
+// Ashraful Islam Asraf

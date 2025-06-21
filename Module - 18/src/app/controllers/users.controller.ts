@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { User } from "../models/users.model";
 import { z } from "zod";
+import bcrypt from './../../../node_modules/bcryptjs/index.d';
 
 
 
@@ -50,12 +51,20 @@ usersRoutes.post("/create-user", async (req: Request, res: Response): Promise<vo
     try {
         const body = await createUserSchemaZod.parseAsync(req.body);
 
-        const user = await User.create(body);
+        // const user = await User.create(body);
+
+        const user = new User(body);
+
+        const password = await user.hashPassword(body.password);
+        user.password = password;
+        console.log(password);
+        await user.save();
+
 
         res.status(201).json({
             success: true,
             message: "User created successfully",
-            user: {}
+            user
         });
 
     } catch (error) {

@@ -17,6 +17,12 @@ const noteSchema = new mongoose_1.Schema({
     tags: {
         label: { type: String, required: true },
         color: { type: String, default: "blue" }
+    },
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        unique: true
     }
 }, {
     versionKey: false,

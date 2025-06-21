@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { Note } from "../models/notes.model";
 // import { Note } from "../models/notes.model";
+// import bcrypt from './../../../node_modules/bcryptjs/index.d';
 
 
 
@@ -8,7 +9,7 @@ export const notesRoutes = express.Router();
 
 // get all notes
 notesRoutes.get("/", async (req: Request, res: Response) => {
-    const notes = await Note.find();
+    const notes = await Note.find().populate("userId");
     res.status(200).json({
         success: true,
         notes
@@ -28,6 +29,7 @@ notesRoutes.post("/create-note", async (req: Request, res: Response) => {
 
     // Approach - 02
     const body = req.body;
+
     const note = await Note.create(body);
 
     res.status(201).json({
@@ -78,3 +80,6 @@ notesRoutes.delete("/:id", async (req: Request, res: Response) => {
         message: "Note deleted successfully"
     });
 });
+
+
+// Ashraful Islam Asraf

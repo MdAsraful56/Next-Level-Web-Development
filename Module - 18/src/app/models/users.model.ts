@@ -1,9 +1,40 @@
-import { model, Schema } from "mongoose";
-import IUser from "../interfaces/user.interface";
+import { Model, model, Schema } from "mongoose";
+import IUser, { IAddress, UserInstanceMethods } from "../interfaces/user.interface";
 import validator from 'validator';
+import { string } from "zod";
+import bcrypt from "bcryptjs";
 
 
-const userSchema = new Schema<IUser>(
+const addressSchema = new Schema<IAddress>(
+    {
+        city: {
+            type: String,
+            // required: true,
+            trim: true
+        },
+        // state: {
+        //     type: String,
+        //     required: true,
+        //     trim: true
+        // },
+        country: {
+            type: String,
+            // required: true,
+            trim: true
+        },
+        zipCode: {
+            type: Number,
+            // required: true
+        }
+    }, 
+    {
+        _id: false, // to not create a separate _id for this subdocument
+        versionKey: false
+    }
+);
+
+
+const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethods>(
     {
         name: { 
             type: String, 
@@ -29,7 +60,6 @@ const userSchema = new Schema<IUser>(
             // }
 
             validate: [validator.isEmail, "vai email ta valid na. ayta ami deksi validaror npm library diye check korechi"]
-
         },
         age: { 
             type: Number, 
@@ -39,7 +69,7 @@ const userSchema = new Schema<IUser>(
         },
         password: { 
             type: String,
-            required: true,
+            // required: true,
             // lowercase: true
         },
         role: {
@@ -50,6 +80,11 @@ const userSchema = new Schema<IUser>(
                 message: "vai right role dete hoybo"
             },
             default: "USER"
+        },
+        // address: addressSchema,
+        address: {
+            type: addressSchema,
+            // required: true
         }
     },
     {
@@ -57,5 +92,12 @@ const userSchema = new Schema<IUser>(
         timestamps: true
     }
 );
+
+
+userSchema.method("hashPassword", async function(plainPassword: string) {
+    const password = await bcrypt.hash(plainPassword, 10);
+    this.password = password;
+    this.save();
+})
 
 export const User = model<IUser>("User", userSchema);

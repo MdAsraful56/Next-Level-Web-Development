@@ -48,11 +48,16 @@ exports.usersRoutes.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, 
 exports.usersRoutes.post("/create-user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = yield createUserSchemaZod.parseAsync(req.body);
-        const user = yield users_model_1.User.create(body);
+        // const user = await User.create(body);
+        const user = new users_model_1.User(body);
+        const password = yield user.hashPassword(body.password);
+        user.password = password;
+        console.log(password);
+        yield user.save();
         res.status(201).json({
             success: true,
             message: "User created successfully",
-            user: {}
+            user
         });
     }
     catch (error) {
