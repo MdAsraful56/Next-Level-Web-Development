@@ -1,5 +1,6 @@
 // import React from 'react';
 
+import { AddTaskModal } from "@/module/tasks/AddTaskModal";
 import TaskCard from "@/module/tasks/TaskCard";
 import { selectTasks } from "@/redux/features/task/taskSlice";
 import { useAppSelector } from "@/redux/hook";
@@ -13,8 +14,9 @@ const Task = () => {
 
     return (
         <div>
-            <div className="">
+            <div className="flex justify-between items-center">
                 <h1>Tasks</h1>
+                <AddTaskModal />
             </div>
             <div className="space-y-4 mt-5">
                 {
