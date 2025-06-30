@@ -1,45 +1,38 @@
 import type { RootState } from "@/redux/store";
 import type { ITask } from "@/Types/types";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
 
 interface IInitialState {
-    task : ITask[]
+  task: ITask[];
 }
-
-
 
 const initialState: IInitialState = {
-    task: [
-        {
-            id: "23456789",
-            title: "How to use Redux Toolkit",
-            description: "First, you need to install Redux Toolkit and React-Redux.",
-            isCompleted: false,
-            dueDate: "2025-01-01T00:00:00.000Z",
-        },
-        {
-            id: "2345634567789",
-            title: "How to use Redux Toolkit",
-            description: "First, you need to install Redux Toolkit and React-Redux.",
-            isCompleted: true,
-            dueDate: "2025-01-01T00:00:00.000Z",
-        }
-    ]
+  task: [],
 };
 
-
 const taskSlice = createSlice({
-    name: "task",
-    initialState,
-    reducers: {}
+  name: "task",
+  initialState,
+  reducers: {
+    addTask: (state, action: PayloadAction<ITask>) => {
+      const id = uuidv4();
+
+      const taskData = {
+        ...action.payload,
+        id,
+        isCompleted: false,
+      };
+
+      state.task.push(taskData);
+    },
+  },
 });
 
-
-
-
 export const selectTasks = (state: RootState) => {
-    return state.tasks.task;
-}
+  return state.tasks.task;
+};
 
+export const { addTask } = taskSlice.actions;
 
 export default taskSlice.reducer;
