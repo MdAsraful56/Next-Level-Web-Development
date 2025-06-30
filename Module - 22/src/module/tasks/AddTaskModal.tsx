@@ -29,9 +29,15 @@ import { cn } from "@/lib/utils";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { useForm } from "react-hook-form";
+import {
+  useForm,
+  // type FieldValue,
+  type FieldValues,
+  type SubmitHandler,
+} from "react-hook-form";
 import { useAppDispatch } from "@/redux/hook";
 import { addTask } from "@/redux/features/task/taskSlice";
+import type { ITask } from "@/Types/types";
 // import type { ITask } from "@/Types/types";
 // import { Input } from "@/components/ui/input"
 // import { Label } from "@/components/ui/label"
@@ -41,9 +47,9 @@ export function AddTaskModal() {
 
   const dispatch = useAppDispatch();
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<FieldValues> = (data: any) => {
     console.log(data);
-    dispatch(addTask(data));
+    dispatch(addTask(data as ITask));
   };
 
   return (
