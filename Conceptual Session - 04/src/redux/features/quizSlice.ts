@@ -2,11 +2,19 @@ import { quizData } from "@/layout/components/Quiz/quizData";
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
+interface QuizState {
+  questions: typeof quizData;
+  currentQuestionIndex: number;
+  userAnswers: (string | null)[];
+  // quizCompleted: boolean;
+}
+
 // Define the initial state using that type
-const initialState = {
+const initialState: QuizState = {
   questions: quizData,
-  currentQuestionIndex: 4,
+  currentQuestionIndex: 0,
   userAnswers: Array(quizData.length).fill(null),
+  // quizCompleted: false,
 };
 
 export const quizSlice = createSlice({
