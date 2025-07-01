@@ -1,21 +1,38 @@
+import { quizData } from "@/layout/components/Quiz/quizData";
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 // Define the initial state using that type
 const initialState = {
-  value: 0,
+  questions: quizData,
+  currentQuestionIndex: 4,
+  userAnswers: Array(quizData.length).fill(null),
 };
 
 export const quizSlice = createSlice({
   name: "quiz",
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
-  reducers: {},
+  reducers: {
+    setAnswer: (state, action) => {
+      const { questionIndex, answer } = action.payload;
+      state.userAnswers[questionIndex] = answer;
+    },
+    nextQuestion: (state) => {
+      if (state.currentQuestionIndex < state.questions.length - 1) {
+        state.currentQuestionIndex += 1;
+      }
+    },
+    previousQuestion: (state) => {
+      if (state.currentQuestionIndex > 0) {
+        state.currentQuestionIndex -= 1;
+      }
+    },
+  },
 });
 
-// export const {} = quizSlice.actions;
+export const { setAnswer, nextQuestion, previousQuestion } = quizSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCount = (state: RootState) => state.counter.value;
+export const selectCount = (state: RootState) => state.quiz.questions;
 
 export default quizSlice.reducer;
