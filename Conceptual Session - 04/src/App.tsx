@@ -1,12 +1,10 @@
 import "./App.css";
-import { Button } from "./components/ui/button";
+import Navbar from "./layout/components/Navbar/Navbar";
 
 function App() {
   return (
     <div className="">
-      <Button className="bg-blue-500 text-white hover:bg-blue-600">
-        Click Me
-      </Button>
+      <Navbar />
     </div>
   );
 }
