@@ -1,14 +1,16 @@
 import bodyParser from "body-parser";
 import cors from "cors";
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 app.use(bodyParser.json()); // To parse JSON bodies
 app.use(cors({ origin: ["http://localhost:5173"] }));
 
 // Connect to MongoDB
+
+mongoose.set("strictQuery", true); // or false, depending on what behavior you want
 
 mongoose.connect(process.env.DB_URl!);
 
@@ -112,4 +114,6 @@ app.delete("/api/quizzes/:id", async (req, res) => {
 
 // Start the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on port: http://localhost:${PORT}`)
+);
